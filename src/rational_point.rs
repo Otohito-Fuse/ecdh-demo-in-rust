@@ -1,7 +1,7 @@
 use crate::identities::Identity;
 use crate::inverse::Inverse;
 use std::fmt;
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, Mul, Neg, Sub};
 
 /// This type is intended to be treated as the type representing the rational points on some plane curves.
 ///
@@ -31,8 +31,16 @@ impl<T: fmt::Display> fmt::Display for RationalPoint<T> {
     }
 }
 
-impl<T: Add<Output = T> + Mul<Output = T> + Sub<Output = T> + Copy + Eq + Inverse + Identity>
-    RationalPoint<T>
+impl<
+        T: Add<Output = T>
+            + Mul<Output = T>
+            + Sub<Output = T>
+            + Copy
+            + Eq
+            + Inverse
+            + Identity
+            + Neg<Output = T>,
+    > RationalPoint<T>
 {
     /// An addition of rational points on an elliptic curve.
     pub fn add_rational_points(&self, rhs: &Self, a: T) -> Self {
@@ -42,7 +50,7 @@ impl<T: Add<Output = T> + Mul<Output = T> + Sub<Output = T> + Copy + Eq + Invers
                 RationalPoint::O => RationalPoint::Point(x1, y1),
                 RationalPoint::Point(x2, y2) => {
                     if x1 == x2 {
-                        if y1 != y2 {
+                        if y1 == -y2 {
                             RationalPoint::O
                         } else {
                             let id = T::identity();
@@ -60,8 +68,16 @@ impl<T: Add<Output = T> + Mul<Output = T> + Sub<Output = T> + Copy + Eq + Invers
     }
 }
 
-impl<T: Add<Output = T> + Mul<Output = T> + Sub<Output = T> + Copy + Eq + Inverse + Identity>
-    RationalPoint<T>
+impl<
+        T: Add<Output = T>
+            + Mul<Output = T>
+            + Sub<Output = T>
+            + Copy
+            + Eq
+            + Inverse
+            + Identity
+            + Neg<Output = T>,
+    > RationalPoint<T>
 {
     /// Calculate nP by repeated squaring
     /// where n is a positive integer and P is a rational point on an elliptic curve.
